@@ -12,7 +12,11 @@ const SignUp = () => {
   });
 
   const handleSignUp = async () => {
-    const response = await axios.post("/api/signup", signUpDatas);
+    console.log(signUpDatas);
+    const response = await axios.post(
+      "http://localhost:8000/api/signup",
+      signUpDatas
+    );
     console.log(response);
   };
 
