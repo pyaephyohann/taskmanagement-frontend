@@ -3,6 +3,7 @@
 import Button from "@/components/Button";
 import React, { useState } from "react";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const SignUp = () => {
   const [signUpDatas, setSignUpDatas] = useState({
@@ -11,10 +12,17 @@ const SignUp = () => {
     password: "",
   });
 
+  axios.defaults.withCredentials = true;
+
+  const csrfToken = Cookies.get("XSRF-TOKEN");
+
+  // Set the CSRF token in Axios headers
+  axios.defaults.headers.common["X-XSRF-TOKEN"] = csrfToken;
+
   const handleSignUp = async () => {
     console.log(signUpDatas);
     const response = await axios.post(
-      "http://localhost:8000/api/signup",
+      "http://localhost:8000/api/regis",
       signUpDatas
     );
     console.log(response);
