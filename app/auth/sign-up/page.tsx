@@ -2,6 +2,7 @@
 
 import Button from "@/components/Button";
 import React, { useState } from "react";
+import axios from "axios";
 
 const SignUp = () => {
   const [signUpDatas, setSignUpDatas] = useState({
@@ -9,6 +10,11 @@ const SignUp = () => {
     email: "",
     password: "",
   });
+
+  const handleSignUp = async () => {
+    const response = await axios.post("/api/signup", signUpDatas);
+    console.log(response);
+  };
 
   return (
     <div className="mt-[5rem]">
@@ -40,7 +46,7 @@ const SignUp = () => {
         />
         <Button
           style="py-[0.8rem] rounded-[1.5rem]"
-          onClick={() => {}}
+          onClick={handleSignUp}
           label="Create Account"
         />
       </div>
