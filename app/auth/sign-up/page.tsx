@@ -22,7 +22,7 @@ const SignUp = () => {
   const handleSignUp = async () => {
     console.log(signUpDatas);
     const response = await axios.post(
-      "http://localhost:8000/api/regis",
+      "http://192.168.1.12/api/register",
       signUpDatas
     );
     console.log(response);
