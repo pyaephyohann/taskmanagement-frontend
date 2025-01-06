@@ -17,7 +17,10 @@ const SignIn = () => {
     }
 
     try {
-      const response = await fetch("http://192.168.1.12:80/api/login");
+      const response = await fetch("http://192.168.1.12:80/api/login", {
+        method: "POST",
+        body: JSON.stringify(user),
+      });
       const responseJson = await response.json();
       console.log(responseJson);
       // Handle success (e.g., redirect or show a success message)
