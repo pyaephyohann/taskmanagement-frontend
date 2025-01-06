@@ -10,7 +10,6 @@ const SignIn = () => {
     password: "",
   });
 
-  
   const handleSignIn = async () => {
     if (!user.email || !user.password) {
       alert("Please fill in both fields!");
@@ -18,11 +17,9 @@ const SignIn = () => {
     }
 
     try {
-      const response = await axios.post(
-        "http://192.168.1.12:70/api/login", // Make sure this URL is correct
-        user
-      );
-      console.log(response.data);
+      const response = await fetch("http://192.168.1.12:80/api/login");
+      const responseJson = await response.json();
+      console.log(responseJson);
       // Handle success (e.g., redirect or show a success message)
     } catch (error) {
       console.error("Error signing in:", error);
@@ -32,14 +29,10 @@ const SignIn = () => {
 
   return (
     <div className="mt-[5rem]">
-      <h1 className="text-center text-4xl font-bold">
-        Log In To Your Account
-      </h1>
+      <h1 className="text-center text-4xl font-bold">Log In To Your Account</h1>
       <div className="flex flex-col w-[30%] space-y-[1rem] mx-auto mt-[3rem]">
         <input
-          onChange={(event) =>
-            setUser({ ...user, email: event.target.value })
-          }
+          onChange={(event) => setUser({ ...user, email: event.target.value })}
           className="pl-[1rem] bg-purple-200 rounded-[1.5rem] py-[0.8rem] outline-purple-500"
           type="email"
           placeholder="Enter Email"
@@ -49,7 +42,7 @@ const SignIn = () => {
             setUser({ ...user, password: event.target.value })
           }
           className="pl-[1rem] bg-purple-200 rounded-[1.5rem] py-[0.8rem] outline-purple-500"
-          type="password"
+          type="text"
           placeholder="Enter Password"
         />
         <Button

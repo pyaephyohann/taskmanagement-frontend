@@ -12,20 +12,14 @@ const SignUp = () => {
     password: "",
   });
 
-  axios.defaults.withCredentials = true;
-
-  const csrfToken = Cookies.get("XSRF-TOKEN");
-
-  // Set the CSRF token in Axios headers
-  axios.defaults.headers.common["X-XSRF-TOKEN"] = csrfToken;
-
   const handleSignUp = async () => {
     console.log(signUpDatas);
-    const response = await axios.post(
-      "http://192.168.1.12/api/register",
-      signUpDatas
-    );
-    console.log(response);
+    const response = await fetch("http://192.168.1.12:80/api/register", {
+      method: "POST",
+      body: JSON.stringify(signUpDatas),
+    });
+    const responseJson = await response.json();
+    console.log(responseJson);
   };
 
   return (
