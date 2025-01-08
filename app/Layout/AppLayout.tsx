@@ -1,8 +1,8 @@
 "use client";
 
-import { useAppDispatch } from "@/store/hooks";
-import { fetchAppDatas } from "@/store/slices/appSlice";
-import React, { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect } from "react";
+import { useAppDispatch } from "../store/hooks";
+import { fetchAppDatas } from "../store/slices/appSlice";
 
 interface Props {
   children: ReactNode;

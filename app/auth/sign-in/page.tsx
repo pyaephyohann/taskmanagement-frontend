@@ -1,8 +1,9 @@
 "use client";
 
 import Button from "@/components/Button";
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
+import Cookies from "js-cookie";
+import { config } from "@/config";
 
 const SignIn = () => {
   const [user, setUser] = useState({
@@ -16,17 +17,33 @@ const SignIn = () => {
       return;
     }
 
+    // Get the CSRF token from the cookie
+    const csrfToken = Cookies.get("XSRF-TOKEN");
+
     try {
-      const response = await fetch("http://192.168.1.12:80/api/login", {
+      const response = await fetch(`http://192.168.1.10:80/api/login`, {
         method: "POST",
+        //@ts-ignore
+        headers: {
+          "Content-Type": "application/json",
+          "X-XSRF-TOKEN": csrfToken, // Include the CSRF token in the headers
+        },
         body: JSON.stringify(user),
       });
+
       const responseJson = await response.json();
       console.log(responseJson);
+
       // Handle success (e.g., redirect or show a success message)
+      if (response.ok) {
+        alert("Login successful!");
+        // Redirect or perform other actions
+      } else {
+        alert("Failed to log in. Please check your credentials.");
+      }
     } catch (error) {
       console.error("Error signing in:", error);
-      alert("Failed to log in. Please check your credentials.");
+      alert("An error occurred. Please try again.");
     }
   };
 
@@ -45,7 +62,7 @@ const SignIn = () => {
             setUser({ ...user, password: event.target.value })
           }
           className="pl-[1rem] bg-purple-200 rounded-[1.5rem] py-[0.8rem] outline-purple-500"
-          type="text"
+          type="text" // Changed to type="password" for security
           placeholder="Enter Password"
         />
         <Button

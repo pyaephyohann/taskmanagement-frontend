@@ -28,7 +28,7 @@ export default function SideBar({ open, setOpen }: Props) {
           my: "1rem",
         }}
       >
-        Task Manager
+        TaskyPie
       </Box>
       <List>
         {["Notifications", "Settings"].map((text, index) => (

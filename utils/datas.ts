@@ -45,3 +45,78 @@ export const projectDatas = [
     createdAt: "22 Nov, 2025",
   },
 ];
+
+export const tasks = [
+  {
+    id: 1,
+    projectId: 1,
+    title: "Make Community Page Responsive",
+    description:
+      "This task have to be done and we can make more money by completing this",
+    status: "pending",
+    priority: "medium",
+    due_date: "23 Nov 2025",
+    assigned_to: "Ikki",
+    created_by: "Pyae Phyo Han",
+  },
+  {
+    id: 2,
+    projectId: 1,
+    title: "Make Community Page Responsive",
+    description:
+      "This task have to be done and we can make more money by completing this",
+    status: "pending",
+    priority: "medium",
+    due_date: "23 Nov 2025",
+    assigned_to: "Ikki",
+    created_by: "Pyae Phyo Han",
+  },
+  {
+    id: 3,
+    projectId: 1,
+    title: "Make Community Page Responsive",
+    description:
+      "This task have to be done and we can make more money by completing this",
+    status: "pending",
+    priority: "medium",
+    due_date: "23 Nov 2025",
+    assigned_to: "Ikki",
+    created_by: "Pyae Phyo Han",
+  },
+  {
+    id: 4,
+    projectId: 1,
+    title: "Make Community Page Responsive",
+    description:
+      "This task have to be done and we can make more money by completing this",
+    status: "pending",
+    priority: "medium",
+    due_date: "23 Nov 2025",
+    assigned_to: "Ikki",
+    created_by: "Pyae Phyo Han",
+  },
+  {
+    id: 5,
+    projectId: 1,
+    title: "Make Community Page Responsive",
+    description:
+      "This task have to be done and we can make more money by completing this",
+    status: "pending",
+    priority: "medium",
+    due_date: "23 Nov 2025",
+    assigned_to: "Ikki",
+    created_by: "Pyae Phyo Han",
+  },
+  {
+    id: 6,
+    projectId: 1,
+    title: "Make Community Page Responsive",
+    description:
+      "This task have to be done and we can make more money by completing this",
+    status: "pending",
+    priority: "medium",
+    due_date: "23 Nov 2025",
+    assigned_to: "Ikki",
+    created_by: "Pyae Phyo Han",
+  },
+];

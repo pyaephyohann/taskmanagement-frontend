@@ -12,10 +12,17 @@ const SignUp = () => {
     password: "",
   });
 
+  const csrfToken = Cookies.get("XSRF-TOKEN");
+
   const handleSignUp = async () => {
     console.log(signUpDatas);
-    const response = await fetch("http://192.168.1.12:80/api/register", {
+    const response = await fetch("http://192.168.1.10:80/api/register", {
       method: "POST",
+      //@ts-ignore
+      headers: {
+        "Content-Type": "application/json",
+        "X-XSRF-TOKEN": csrfToken, // Include the CSRF token in the headers
+      },
       body: JSON.stringify(signUpDatas),
     });
     const responseJson = await response.json();
