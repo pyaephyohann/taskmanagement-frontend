@@ -37,7 +37,7 @@ const ControlPanel = () => {
             return (
               <div
                 onClick={() => {
-                  router.push(`/tasks?projectId=${project.id}`);
+                  router.push(`/control-panel/project/${project.projects_id}`);
                 }}
                 className="m-[0.5rem]"
                 key={project.id}

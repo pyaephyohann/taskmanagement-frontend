@@ -19,7 +19,7 @@ export default function NavBar() {
       sx={{ flexGrow: 1, position: "fixed", zIndex: 30, top: 0, width: "100%" }}
     >
       <AppBar position="static">
-        <Toolbar sx={{ bgcolor: "#A855F7" }}>
+        <Toolbar sx={{ bgcolor: "white" }}>
           <IconButton
             onClick={() => setOpen(true)}
             size="large"
@@ -28,19 +28,23 @@ export default function NavBar() {
             aria-label="menu"
             sx={{ mr: 2 }}
           >
-            <MenuIcon />
+            <MenuIcon sx={{ color: "#A855F7" }} />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1, color: "#A855F7" }}
+          >
             TaskyPie
           </Typography>
           <Button
-            sx={{ textTransform: "none", fontSize: "1.1rem" }}
+            sx={{ textTransform: "none", fontSize: "1.1rem", color: "#A855F7" }}
             color="inherit"
           >
             Login
           </Button>
           <Button
-            sx={{ textTransform: "none", fontSize: "1.1rem" }}
+            sx={{ textTransform: "none", fontSize: "1.1rem", color: "#A855F7" }}
             color="inherit"
           >
             Register

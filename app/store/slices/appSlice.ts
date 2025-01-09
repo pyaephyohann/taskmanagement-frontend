@@ -25,7 +25,7 @@ export const fetchAppDatas = createAsyncThunk(
   "app/fetchAppDatas",
   async (payload, thunkAPI) => {
     thunkAPI.dispatch(setIsLoading(true));
-    const response = await fetch(`http://192.168.1.10:80/api/data`);
+    const response = await fetch(`http://192.168.1.15:80/api/data`);
     const responseJson = await response.json();
     const { users, projects, tasks } = responseJson;
     thunkAPI.dispatch(setUsers(users));
