@@ -29,7 +29,7 @@ export const projectsSlice = createSlice({
     },
     deleteProject: (state, action: PayloadAction<any>) => {
       state.items = state.items.filter(
-        (item: any) => action.payload.id !== item.id
+        (item: any) => action.payload.projects_id !== item.projects_id
       );
     },
   },

@@ -4,9 +4,11 @@ import ProjectCard from "@/components/ProjectCard";
 import { projectDatas } from "@/utils/datas";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { config } from "./config";
 
 const App = () => {
   const router = useRouter();
+  console.log(config.apiBaseUrl);
   // const [projects, setProjects] = useState<any>([]);
 
   // const [isLoading, setIsLoading] = useState(false);

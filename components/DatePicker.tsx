@@ -8,19 +8,23 @@ import { DatePicker as DatePickerMui } from "@mui/x-date-pickers/DatePicker";
 interface Props {
   onChange: (value: Dayjs | null) => void;
   defaultValue?: Dayjs;
+  width?: string;
+  label: string;
 }
 
-const DatePicker = ({ onChange, defaultValue }: Props) => {
+const DatePicker = ({ onChange, defaultValue, width, label }: Props) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={["DatePicker", "DatePicker"]}>
         <DatePickerMui
           sx={{
-            width: "20rem",
+            width: width ? width : "20rem",
           }}
-          onChange={(newValue) => onChange(newValue)}
+          onChange={(newValue) => {
+            onChange(newValue);
+          }}
           format="DD/MM/YYYY"
-          label="Deadline"
+          label={label}
           defaultValue={defaultValue}
         />
       </DemoContainer>

@@ -1,12 +1,16 @@
 "use client";
 
-import { useAppSelector } from "@/app/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
 import { appDatas } from "@/app/store/slices/appSlice";
 import DatePicker from "@/components/DatePicker";
-import DeleteDialog from "@/components/DeleteDialog";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { deleteProject } from "@/app/store/slices/projectsSlice";
+import { config } from "@/app/config";
+import { useRouter } from "next/navigation";
 
 interface Params {
   params: {
@@ -16,8 +20,6 @@ interface Params {
 
 const EditProject = ({ params }: Params) => {
   const { projects } = useAppSelector(appDatas);
-
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const { id } = params;
 
@@ -29,7 +31,24 @@ const EditProject = ({ params }: Params) => {
     return project.projects_id === Number(id);
   });
 
-  console.log(currentProject);
+  const csrfToken = Cookies.get("XSRF-TOKEN");
+
+  axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
+
+  axios.defaults.headers.common[
+    "Authorization"
+  ] = `Bearer 14|H8IkkoMPCOY97imhQtVfq2ldtRL0VOp9w7Vg05dP6934b0a2`;
+
+  const handleEditProject = async () => {
+    axios
+      .put(`${config.apiBaseUrl}/projects/${id}`, projectToUpdate)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   if (!currentProject)
     return <div className="mt-[8rem] text-center text-3xl">Loading...</div>;
@@ -69,12 +88,14 @@ const EditProject = ({ params }: Params) => {
           }
         />
         <DatePicker
+          label="Deadline"
           defaultValue={dayjs(currentProject.deadline)}
           onChange={(value) => {
             setProjectToUpdate({ ...projectToUpdate, deadline: value });
           }}
         />
         <Button
+          onClick={handleEditProject}
           disabled={isLoading}
           sx={{
             width: "20rem",
@@ -118,9 +139,6 @@ const EditProject = ({ params }: Params) => {
               </Typography>
             </Box>
             <Button
-              onClick={() => {
-                setOpenDeleteDialog(true);
-              }}
               variant="contained"
               sx={{
                 bgcolor: "#F93827",
@@ -132,12 +150,6 @@ const EditProject = ({ params }: Params) => {
           </Box>
         </Box>
       </Box>
-      <DeleteDialog
-        open={openDeleteDialog}
-        setOpen={setOpenDeleteDialog}
-        title="Delete Project"
-        callBack={() => {}}
-      />
     </div>
   );
 };

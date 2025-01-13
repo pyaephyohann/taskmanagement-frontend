@@ -1,18 +1,49 @@
 "use client";
 
 import React, { useState } from "react";
-import { useAppSelector } from "../store/hooks";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { appDatas } from "../store/slices/appSlice";
 import { useRouter } from "next/navigation";
 import ProjectCard from "@/components/ProjectCard";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Chip } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import NewProject from "@/components/NewProject";
+import dayjs from "dayjs";
+import { addProject, deleteProject } from "../store/slices/projectsSlice";
+import DeleteDialog from "@/components/DeleteDialog";
+import Cookies from "js-cookie";
+import axios from "axios";
+import { config } from "../config";
 
 const ControlPanel = () => {
   const { projects } = useAppSelector(appDatas);
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const dispatch = useAppDispatch();
+
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
+  const [projectIdToDelete, setProjectIdToDelete] = useState(null);
+
+  const csrfToken = Cookies.get("XSRF-TOKEN");
+
+  axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
+
+  axios.defaults.headers.common[
+    "Authorization"
+  ] = `Bearer 14|H8IkkoMPCOY97imhQtVfq2ldtRL0VOp9w7Vg05dP6934b0a2`;
+
+  const handleDeleteProject = async () => {
+    await axios
+      .delete(`${config.apiBaseUrl}/projects/${projectIdToDelete}`)
+      .then((response) => {
+        dispatch(deleteProject(response.data.data));
+        alert("hehe");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   return (
     <div className="mb-[1.5rem] px-[3rem]">
@@ -37,24 +68,58 @@ const ControlPanel = () => {
             return (
               <div
                 onClick={() => {
-                  router.push(`/control-panel/project/${project.projects_id}`);
+                  router.push(
+                    `/control-panel/tasks?projectId=${project.projects_id}`
+                  );
                 }}
-                className="m-[0.5rem]"
+                className="m-[0.8rem]"
                 key={project.id}
               >
                 <ProjectCard
-                  createdAt={project.created_at}
+                  createdAt={dayjs(project.created_at).format("DD MMM YYYY")}
                   name={project.name}
                   description={project.description}
                   deadline={project.deadline}
                   createdBy={project.user_name}
                 />
+                <div className="mt-[0.5rem] flex justify-between px-[1rem]">
+                  <Chip
+                    onClick={() => {
+                      setProjectIdToDelete(project.projects_id);
+                      setOpenDeleteDialog(true);
+                    }}
+                    label="Delete"
+                    clickable
+                    sx={{
+                      bgcolor: "#F93827",
+                      color: "white",
+                    }}
+                  />
+                  <Chip
+                    onClick={() => {
+                      router.push(
+                        `/control-panel/project/${project.projects_id}`
+                      );
+                    }}
+                    label="Edit"
+                    sx={{
+                      bgcolor: "#A855F7",
+                      color: "white",
+                    }}
+                  />
+                </div>
               </div>
             );
           })}
         </div>
       </div>
-      <NewProject open={open} setOpen={setOpen} callBack={() => {}} />
+      <NewProject open={open} setOpen={setOpen} />
+      <DeleteDialog
+        open={openDeleteDialog}
+        setOpen={setOpenDeleteDialog}
+        title="Delete Project"
+        callBack={handleDeleteProject}
+      />
     </div>
   );
 };

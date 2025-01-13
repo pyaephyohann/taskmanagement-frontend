@@ -3,7 +3,7 @@
 import Button from "@/components/Button";
 import React, { useState } from "react";
 import Cookies from "js-cookie";
-import { config } from "@/config";
+import { config } from "@/app/config";
 
 const SignIn = () => {
   const [user, setUser] = useState({
@@ -21,7 +21,7 @@ const SignIn = () => {
     const csrfToken = Cookies.get("XSRF-TOKEN");
 
     try {
-      const response = await fetch(`http://192.168.1.10:80/api/login`, {
+      const response = await fetch(`${config.apiBaseUrl}/login`, {
         method: "POST",
         //@ts-ignore
         headers: {

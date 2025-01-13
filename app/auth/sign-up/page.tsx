@@ -4,6 +4,7 @@ import Button from "@/components/Button";
 import React, { useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { config } from "@/app/config";
 
 const SignUp = () => {
   const [signUpDatas, setSignUpDatas] = useState({
@@ -16,7 +17,7 @@ const SignUp = () => {
 
   const handleSignUp = async () => {
     console.log(signUpDatas);
-    const response = await fetch("http://192.168.1.10:80/api/register", {
+    const response = await fetch(`${config.apiBaseUrl}/register`, {
       method: "POST",
       //@ts-ignore
       headers: {

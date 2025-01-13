@@ -1,4 +1,3 @@
-import { config } from "@/config";
 import {
   PayloadAction,
   createAsyncThunk,
@@ -9,7 +8,9 @@ import { RootState } from "..";
 import { setUsers } from "./usersSlice";
 import { setProjects } from "./projectsSlice";
 import { setTasks } from "./tasksSlice";
-// import { setUsers } from "./usersSlice";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { config } from "@/app/config";
 
 interface BackofficeState {
   init: boolean;
@@ -21,18 +22,32 @@ const initialState: BackofficeState = {
   isLoading: false,
 };
 
+const csrfToken = Cookies.get("XSRF-TOKEN");
+
+axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
+
+axios.defaults.headers.common[
+  "Authorization"
+] = `Bearer 2|OXLPwHIjbYsyVqa8ALu9a9MNrxB8zpRSk9CqdjhDd4579719`;
+
 export const fetchAppDatas = createAsyncThunk(
   "app/fetchAppDatas",
   async (payload, thunkAPI) => {
     thunkAPI.dispatch(setIsLoading(true));
-    const response = await fetch(`http://192.168.1.15:80/api/data`);
-    const responseJson = await response.json();
-    const { users, projects, tasks } = responseJson;
-    thunkAPI.dispatch(setUsers(users));
-    thunkAPI.dispatch(setProjects(projects));
-    thunkAPI.dispatch(setTasks(tasks));
-    thunkAPI.dispatch(setInit(true));
-    thunkAPI.dispatch(setIsLoading(false));
+
+    try {
+      const response = await axios.get(`${config.apiBaseUrl}/data`);
+      const { users, projects, tasks } = response.data;
+
+      thunkAPI.dispatch(setUsers(users));
+      thunkAPI.dispatch(setProjects(projects));
+      thunkAPI.dispatch(setTasks(tasks));
+      thunkAPI.dispatch(setInit(true));
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      thunkAPI.dispatch(setIsLoading(false));
+    }
   }
 );
 

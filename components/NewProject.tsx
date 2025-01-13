@@ -1,5 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
 import { addProject } from "@/app/store/slices/projectsSlice";
+import axios from "axios";
 import Cookies from "js-cookie";
 import dayjs from "dayjs";
 
@@ -16,14 +17,14 @@ import {
 import { useState } from "react";
 import DatePicker from "./DatePicker";
 import { appDatas } from "@/app/store/slices/appSlice";
+import { config } from "@/app/config";
 
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
-  callBack: () => void;
 }
 
-const NewProject = ({ open, setOpen, callBack }: Props) => {
+const NewProject = ({ open, setOpen }: Props) => {
   const [newProjectDatas, setNewProjectDatas] = useState<any>({
     name: "",
     description: "",
@@ -35,29 +36,31 @@ const NewProject = ({ open, setOpen, callBack }: Props) => {
   const dispatch = useAppDispatch();
   const [isCreating, setIsCreating] = useState(false);
 
+  const csrfToken = Cookies.get("XSRF-TOKEN");
+
+  axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
+
+  axios.defaults.headers.common[
+    "Authorization"
+  ] = `Bearer 2|OXLPwHIjbYsyVqa8ALu9a9MNrxB8zpRSk9CqdjhDd4579719`;
+
   const handleCreateNewProject = async () => {
-    // Get the CSRF token from the cookie
-    const csrfToken = Cookies.get("XSRF-TOKEN"); // Get the CSRF token from the cookie
+    axios
+      .post(`${config.apiBaseUrl}/projects`, newProjectDatas)
+      .then((response) => {
+        const createdProject = {
+          ...response.data.data,
+          projects_id: response.data.data.id,
+          id: undefined,
+        };
 
-    const response = await fetch(`http://192.168.1.10:80/api/projects`, {
-      method: "POST",
-      //@ts-ignore
-      headers: {
-        "Content-Type": "application/json",
-        Authorization:
-          "Bearer 10|CXl2vSpF3TddiN4TOViSg9mvZbYFr2BZtUsci1wk91de8d4e",
-        "X-XSRF-TOKEN": csrfToken, // Include the CSRF token in the headers
-      },
-      credentials: "include", // Include cookies in the request
-      body: JSON.stringify(newProjectDatas),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const createdProject = await response.json();
-    console.log("Project created successfully:", createdProject);
+        delete response.data.data.id;
+        dispatch(addProject(createdProject));
+        setOpen(false);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (
@@ -94,6 +97,7 @@ const NewProject = ({ open, setOpen, callBack }: Props) => {
           />
           <Box sx={{ marginBottom: "1rem" }}>
             <DatePicker
+              label="Deadline"
               onChange={(value) =>
                 setNewProjectDatas({
                   ...newProjectDatas,

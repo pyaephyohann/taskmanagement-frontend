@@ -28,7 +28,7 @@ export default function SideBar({ open, setOpen }: Props) {
           my: "1rem",
         }}
       >
-        TaskyPie
+        Loke Kyee
       </Box>
       <List>
         {["Notifications", "Settings"].map((text, index) => (

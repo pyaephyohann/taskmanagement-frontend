@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import React from "react";
 import { BsTicketDetailed } from "react-icons/bs";
 
@@ -32,7 +33,7 @@ const ProjectCard = ({
           </p>
         </div>
         <h4 className="rounded-2xl bg-purple-500 text-[0.8rem] text-white p-[0.3rem] px-[0.8rem]">
-          {deadline}
+          {dayjs(deadline).format("YYYY-MM-DD")}
         </h4>
       </div>
     </div>

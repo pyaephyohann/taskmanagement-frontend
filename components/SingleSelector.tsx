@@ -15,11 +15,18 @@ interface Props {
   defaultValue?: Option;
   label: string;
   onChange: (value: number) => void;
+  width?: string;
 }
 
-const SingleSelector = ({ options, label, onChange, defaultValue }: Props) => {
+const SingleSelector = ({
+  options,
+  label,
+  onChange,
+  defaultValue,
+  width,
+}: Props) => {
   return (
-    <Box sx={{ minWidth: "20rem" }}>
+    <Box sx={{ minWidth: width ? width : "20rem" }}>
       <FormControl fullWidth>
         <InputLabel>{label}</InputLabel>
         <Select
