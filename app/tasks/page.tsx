@@ -16,7 +16,12 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { tasks } from "@/utils/datas";
+import { useAppSelector } from "../store/hooks";
+import { appDatas } from "../store/slices/appSlice";
+import SingleSelector from "@/components/SingleSelector";
+import axios from "axios";
+import { config } from "../config";
+import Cookies from "js-cookie";
 
 interface Props {
   searchParams: {
@@ -26,9 +31,64 @@ interface Props {
 
 const Tasks = ({ searchParams }: Props) => {
   const { projectId } = searchParams;
+  const { tasks, users } = useAppSelector(appDatas);
+
+  const [selectedStatus, setSelectedStatus] = useState<any>(null);
+
+  const tasksByProjectId = tasks.filter((item: any) => {
+    return item.project_id === Number(projectId);
+  });
+
+  const csrfToken = Cookies.get("XSRF-TOKEN");
+
+  axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
+
+  axios.defaults.headers.common[
+    "Authorization"
+  ] = `Bearer 5|S6uB8oi4m6FDz5EF0jWkspT8mxBxK87YmEwcMrKnc0c5b441`;
+
+  const statusOptions = [
+    {
+      id: 1,
+      name: "pending",
+    },
+    {
+      id: 2,
+      name: "in_progress",
+    },
+    {
+      id: 3,
+      name: "complete",
+    },
+  ];
 
   const Task = ({ task }: any) => {
     const [open, setOpen] = useState(false);
+
+    const assignedUser = users.find((item: any) => item.id === task.assign_to);
+
+    const statusDefaultValue = statusOptions.find((item) => {
+      return item.name === task.status;
+    });
+
+    const handleUpdateTaskStatus = async (statusId: number) => {
+      const status = statusOptions.find((item) => item.id === statusId);
+      setSelectedStatus(status?.name);
+
+      axios
+        .patch(
+          `${config.apiBaseUrl}/projects/${projectId}/tasks/${task.id}/2`,
+          {
+            status: status?.name,
+          }
+        )
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };
 
     const RenderTaskDetails = () => {
       return (
@@ -54,9 +114,19 @@ const Tasks = ({ searchParams }: Props) => {
           <TableCell align="center" component="th" scope="row">
             {task.title}
           </TableCell>
-          <TableCell align="center">{task.status}</TableCell>
+          <TableCell align="center">
+            <SingleSelector
+              options={statusOptions}
+              defaultValue={statusDefaultValue}
+              label="Status"
+              onChange={(statusId) => {
+                handleUpdateTaskStatus(statusId);
+              }}
+              width="2rem"
+            />
+          </TableCell>
           <TableCell align="center">{task.priority}</TableCell>
-          <TableCell align="center">{task.assigned_to}</TableCell>
+          <TableCell align="center">{assignedUser.name}</TableCell>
           <TableCell align="center">{task.due_date}</TableCell>
         </TableRow>
         <TableRow>
@@ -89,7 +159,7 @@ const Tasks = ({ searchParams }: Props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {tasks.map((task) => (
+              {tasksByProjectId.map((task: any) => (
                 <Task task={task} key={task.id} />
               ))}
             </TableBody>
